@@ -1,0 +1,2441 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>PAN Card Apply - Digital Services Portal</title>
+    <meta name="description" content="Complete mobile-first PAN Card application and tracking portal with user dashboard, document verification, payment tracking, and admin management." />
+    <meta property="og:title" content="PAN Card Apply - Digital Services Portal" />
+    <meta property="og:description" content="Complete mobile-first PAN Card application and tracking portal with user dashboard, document verification, payment tracking, and admin management." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#0d254c" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="manifest" href="/manifest.json" />
+  </head>
+  <body>
+    <!-- Top System Switcher Banner (For development, demo evaluation, and APK export) -->
+    <div id="system-bar" class="system-bar">
+      <div class="system-bar-content">
+        <div class="system-pill">
+          <span class="live-dot"></span>
+          <span class="system-label" id="system-mode-label">DEMO / SANDBOX MODE</span>
+        </div>
+        <div class="system-actions">
+          <button id="btn-device-toggle" class="system-btn" title="Toggle Android Device Frame">
+            <i class="fa-solid fa-mobile-screen"></i> <span class="btn-text">Android Frame</span>
+          </button>
+          <button id="btn-switch-portal" class="system-btn highlight" title="Switch between User App and Admin Panel">
+            <i class="fa-solid fa-sliders"></i> <span id="portal-switch-text">Open Admin Panel</span>
+          </button>
+          <button id="btn-apk-guide" class="system-btn outline" title="Sketchware & HopWeb APK Guide">
+            <i class="fa-solid fa-android"></i> <span class="btn-text">Build APK</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Official Non-Affiliation Disclaimer Banner -->
+    <div class="official-disclaimer-banner">
+      <div class="disclaimer-inner">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span><strong>Notice:</strong> This is an independent facilitation & demo portal. Not affiliated with Income Tax Dept, UTIITSL, or Protean. Applications are processed in Demo/Sandbox mode unless authorized provider API is connected.</span>
+      </div>
+    </div>
+
+    <!-- Device Frame Container (Emulates Android Phone or Fullscreen) -->
+    <div id="app-viewport" class="viewport-mobile">
+      <div class="android-phone-frame">
+        <!-- Android Phone Speaker & Camera Notch -->
+        <div class="phone-notch">
+          <div class="speaker-grill"></div>
+          <div class="front-camera"></div>
+        </div>
+
+        <!-- Android Status Bar -->
+        <div class="android-status-bar">
+          <span class="status-time" id="status-time">09:41</span>
+          <div class="status-icons">
+            <i class="fa-solid fa-wifi"></i>
+            <i class="fa-solid fa-signal"></i>
+            <i class="fa-solid fa-battery-full"></i>
+          </div>
+        </div>
+
+        <!-- Main Screen Body for User Panel -->
+        <div id="user-portal-container" class="portal-container active">
+          <!-- User Top App Bar -->
+          <header class="android-app-bar" id="user-app-bar">
+            <button id="btn-app-bar-back" class="app-bar-action hidden" aria-label="Go Back">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div class="app-bar-title-wrap">
+              <h1 class="app-bar-title" id="user-app-title">PAN Card Portal</h1>
+              <span class="app-bar-subtitle" id="user-app-subtitle">Online Facilitation Services</span>
+            </div>
+            <div class="app-bar-actions">
+              <button id="btn-notifications-open" class="app-bar-action relative" aria-label="Notifications">
+                <i class="fa-solid fa-bell"></i>
+                <span id="unread-notif-badge" class="badge-count hidden">0</span>
+              </button>
+              <button id="btn-profile-quick" class="app-bar-avatar" aria-label="Profile">
+                <span id="user-avatar-initials">U</span>
+              </button>
+            </div>
+          </header>
+
+          <!-- Screens Wrapper -->
+          <main class="screens-viewport" id="screens-viewport">
+            
+            <!-- SCREEN 1: SPLASH SCREEN -->
+            <section id="screen-splash" class="screen-view active">
+              <div class="splash-content">
+                <div class="splash-logo-circle">
+                  <i class="fa-solid fa-id-card"></i>
+                </div>
+                <h1 class="splash-title">PAN Card Apply</h1>
+                <p class="splash-tagline">Fast • Secure • Digital Portal</p>
+                <div class="splash-loader-wrap">
+                  <div class="splash-progress-bar">
+                    <div class="splash-progress-fill" id="splash-progress-fill"></div>
+                  </div>
+                  <span class="splash-status-text" id="splash-status-text">Initializing Secure Storage...</span>
+                </div>
+                <div class="splash-footer">
+                  <span class="splash-version">v2.4.0 • Android Native WebView Ready</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- SCREEN 2: AUTH SCREEN (LOGIN & SIGNUP) -->
+            <section id="screen-auth" class="screen-view">
+              <div class="auth-header">
+                <div class="auth-brand-icon">
+                  <i class="fa-solid fa-address-card"></i>
+                </div>
+                <h2 id="auth-main-title">Welcome Back</h2>
+                <p id="auth-main-subtitle">Sign in to track or apply for your PAN card</p>
+              </div>
+
+              <!-- Auth Tabs -->
+              <div class="auth-tabs">
+                <button id="tab-login" class="auth-tab-btn active">Sign In</button>
+                <button id="tab-signup" class="auth-tab-btn">Create Account</button>
+              </div>
+
+              <!-- Login Form -->
+              <form id="form-login" class="auth-form active">
+                <div class="form-group">
+                  <label for="login-identifier"><i class="fa-regular fa-envelope"></i> Mobile or Email</label>
+                  <input type="text" id="login-identifier" placeholder="e.g. 9876543210 or user@example.com" required autocomplete="username" />
+                  <span class="form-hint">Enter your registered mobile number or email</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="login-password"><i class="fa-solid fa-lock"></i> Password</label>
+                  <div class="password-input-wrap">
+                    <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password" />
+                    <button type="button" class="btn-toggle-pwd" data-target="login-password" aria-label="Toggle password visibility">
+                      <i class="fa-regular fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="auth-extra-row">
+                  <label class="checkbox-container">
+                    <input type="checkbox" id="remember-me" checked />
+                    <span class="custom-checkmark"></span>
+                    <span class="checkbox-label">Remember me</span>
+                  </label>
+                  <button type="button" id="btn-forgot-pwd" class="text-link">Forgot Password?</button>
+                </div>
+
+                <button type="submit" class="btn-android-primary w-full">
+                  <span>Sign In</span>
+                  <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+                <!-- Quick Demo Login Button -->
+                <div class="demo-login-box">
+                  <p class="demo-box-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Quick Evaluation</p>
+                  <button type="button" id="btn-fill-demo-user" class="btn-outline-sm">
+                    Fill Demo User Account
+                  </button>
+                </div>
+              </form>
+
+              <!-- Signup Form -->
+              <form id="form-signup" class="auth-form hidden">
+                <div class="form-group">
+                  <label for="signup-name"><i class="fa-regular fa-user"></i> Full Name (as per Aadhaar)</label>
+                  <input type="text" id="signup-name" placeholder="e.g. Ramesh Kumar" required />
+                </div>
+
+                <div class="form-group">
+                  <label for="signup-mobile"><i class="fa-solid fa-phone"></i> Mobile Number</label>
+                  <div class="input-prefix-group">
+                    <span class="input-prefix">+91</span>
+                    <input type="tel" id="signup-mobile" maxlength="10" placeholder="10-digit mobile" required pattern="[0-9]{10}" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="signup-email"><i class="fa-regular fa-envelope"></i> Email Address</label>
+                  <input type="email" id="signup-email" placeholder="e.g. ramesh@example.com" required />
+                </div>
+
+                <div class="form-group">
+                  <label for="signup-password"><i class="fa-solid fa-lock"></i> Create Password</label>
+                  <div class="password-input-wrap">
+                    <input type="password" id="signup-password" placeholder="At least 6 characters" required />
+                    <button type="button" class="btn-toggle-pwd" data-target="signup-password">
+                      <i class="fa-regular fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="signup-confirm-password"><i class="fa-solid fa-lock"></i> Confirm Password</label>
+                  <div class="password-input-wrap">
+                    <input type="password" id="signup-confirm-password" placeholder="Re-enter password" required />
+                    <button type="button" class="btn-toggle-pwd" data-target="signup-confirm-password">
+                      <i class="fa-regular fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="terms-agreements">
+                  <label class="checkbox-container">
+                    <input type="checkbox" id="signup-terms" required />
+                    <span class="custom-checkmark"></span>
+                    <span class="checkbox-label">I agree to the <a href="#terms" class="legal-link" id="link-terms">Terms & Conditions</a> and <a href="#privacy" class="legal-link" id="link-privacy">Privacy Policy</a></span>
+                  </label>
+                </div>
+
+                <button type="submit" class="btn-android-primary w-full">
+                  <span>Create Account</span>
+                  <i class="fa-solid fa-user-plus"></i>
+                </button>
+              </form>
+            </section>
+
+            <!-- SCREEN 3: USER HOME DASHBOARD -->
+            <section id="screen-home" class="screen-view">
+              <!-- User Greeting Header -->
+              <div class="user-greeting-card">
+                <div class="greeting-text">
+                  <span class="greeting-salute" id="home-greeting-salute">Namaste 🙏</span>
+                  <h2 class="greeting-name" id="home-user-name">Applicant</h2>
+                  <span class="greeting-phone" id="home-user-phone">+91 ••••••••••</span>
+                </div>
+                <div class="greeting-badge">
+                  <i class="fa-solid fa-shield-check"></i> Verified User
+                </div>
+              </div>
+
+              <!-- Main Hero Call To Action: Apply New PAN -->
+              <div class="hero-cta-card">
+                <div class="hero-cta-content">
+                  <div class="hero-badge">Form 49A • Indian Citizens</div>
+                  <h3>Apply for New PAN Card</h3>
+                  <p>Fast digital multi-step application with instant fee confirmation and real-time tracking.</p>
+                  <div class="fee-display-pill">
+                    <span class="fee-tag">Configured Fee:</span>
+                    <span class="fee-value" id="dash-fee-display">₹157</span>
+                    <span class="fee-note">(All inclusive)</span>
+                  </div>
+                  <button id="btn-start-pan-apply" class="btn-hero-action">
+                    <i class="fa-solid fa-file-circle-plus"></i>
+                    <span>Start New Application</span>
+                  </button>
+                </div>
+                <div class="hero-card-art">
+                  <i class="fa-solid fa-id-card-clip"></i>
+                </div>
+              </div>
+
+              <!-- Applications Status Quick Summary -->
+              <div class="section-title-row">
+                <h4>Application Overview</h4>
+                <button class="section-link-btn" id="btn-view-all-apps">View All <i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+
+              <div class="status-summary-grid">
+                <div class="summary-stat-box" data-filter="Draft">
+                  <div class="stat-icon draft"><i class="fa-solid fa-file-pen"></i></div>
+                  <span class="stat-num" id="stat-count-draft">0</span>
+                  <span class="stat-label">Drafts</span>
+                </div>
+                <div class="summary-stat-box" data-filter="Under Review">
+                  <div class="stat-icon pending"><i class="fa-solid fa-clock"></i></div>
+                  <span class="stat-num" id="stat-count-pending">0</span>
+                  <span class="stat-label">Pending</span>
+                </div>
+                <div class="summary-stat-box" data-filter="Processing">
+                  <div class="stat-icon processing"><i class="fa-solid fa-arrows-rotate"></i></div>
+                  <span class="stat-num" id="stat-count-processing">0</span>
+                  <span class="stat-label">Processing</span>
+                </div>
+                <div class="summary-stat-box" data-filter="Completed">
+                  <div class="stat-icon completed"><i class="fa-solid fa-circle-check"></i></div>
+                  <span class="stat-num" id="stat-count-completed">0</span>
+                  <span class="stat-label">Completed</span>
+                </div>
+              </div>
+
+              <!-- Action Required Banner (if any document is rejected) -->
+              <div id="banner-action-required" class="action-required-alert hidden">
+                <div class="alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div class="alert-content">
+                  <h5>Action Required</h5>
+                  <p id="alert-action-text">One or more uploaded documents were rejected. Please re-upload clear copies.</p>
+                </div>
+                <button id="btn-go-documents" class="btn-alert-action">Resolve</button>
+              </div>
+
+              <!-- Quick Service Cards -->
+              <div class="section-title-row mt-4">
+                <h4>Quick Services</h4>
+              </div>
+
+              <div class="quick-services-grid">
+                <div class="service-card" id="btn-card-track">
+                  <div class="service-icon blue"><i class="fa-solid fa-magnifying-glass-location"></i></div>
+                  <div class="service-info">
+                    <h5>Track Application</h5>
+                    <p>Live status timeline</p>
+                  </div>
+                </div>
+
+                <div class="service-card" id="btn-card-documents">
+                  <div class="service-icon emerald"><i class="fa-solid fa-folder-open"></i></div>
+                  <div class="service-info">
+                    <h5>My Documents</h5>
+                    <p>Uploaded proofs & status</p>
+                  </div>
+                </div>
+
+                <div class="service-card" id="btn-card-payments">
+                  <div class="service-icon amber"><i class="fa-solid fa-receipt"></i></div>
+                  <div class="service-info">
+                    <h5>Payment History</h5>
+                    <p>Receipts & transactions</p>
+                  </div>
+                </div>
+
+                <div class="service-card" id="btn-card-help">
+                  <div class="service-icon purple"><i class="fa-solid fa-headset"></i></div>
+                  <div class="service-info">
+                    <h5>Help & Support</h5>
+                    <p>FAQs & support tickets</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Future Architecture Services (Ready for Extension) -->
+              <div class="future-services-section">
+                <div class="future-badge"><i class="fa-solid fa-sparkles"></i> Future Ready Services</div>
+                <div class="future-cards-row">
+                  <div class="future-card" id="btn-future-correction">
+                    <i class="fa-solid fa-pen-ruler"></i>
+                    <span>PAN Correction</span>
+                    <small>Name, DOB, Address</small>
+                  </div>
+                  <div class="future-card" id="btn-future-reprint">
+                    <i class="fa-solid fa-print"></i>
+                    <span>PAN Reprint</span>
+                    <small>Lost or damaged card</small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Security & Legal Footer Pill -->
+              <div class="home-security-pill">
+                <i class="fa-solid fa-lock"></i>
+                <span>256-bit Secure TLS Data Transit • Aadhaar Privacy Enforced</span>
+              </div>
+            </section>
+
+            <!-- SCREEN 4: NEW PAN MULTI-STEP APPLICATION WIZARD -->
+            <section id="screen-apply" class="screen-view">
+              <!-- Wizard Step Indicator -->
+              <div class="wizard-header">
+                <div class="wizard-step-counter">
+                  <span class="step-badge" id="wizard-current-step-label">Step 1 of 7</span>
+                  <button type="button" class="btn-save-draft" id="btn-wizard-save-draft">
+                    <i class="fa-regular fa-floppy-disk"></i> Save Draft
+                  </button>
+                </div>
+                <div class="wizard-progress-bar">
+                  <div class="wizard-progress-track" id="wizard-progress-track" style="width: 14.28%;"></div>
+                </div>
+                <div class="wizard-step-name" id="wizard-step-title">Personal Details</div>
+              </div>
+
+              <form id="form-pan-apply" class="wizard-form-body">
+                <!-- STEP 1: PERSONAL DETAILS -->
+                <div class="wizard-step-content active" id="step-1-content">
+                  <div class="step-intro">
+                    <p>Enter applicant's legal personal details as recorded in official government documents.</p>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Application Category <span class="required">*</span></label>
+                    <div class="radio-cards-row">
+                      <label class="radio-card selected">
+                        <input type="radio" name="applicant_category" value="Individual" checked />
+                        <span class="radio-title"><i class="fa-solid fa-user"></i> Individual</span>
+                      </label>
+                      <label class="radio-card">
+                        <input type="radio" name="applicant_category" value="HUF" />
+                        <span class="radio-title"><i class="fa-solid fa-users"></i> HUF / Firm</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-row-2">
+                    <div class="form-group">
+                      <label for="applicant_title">Title <span class="required">*</span></label>
+                      <select id="applicant_title" required>
+                        <option value="Shri">Shri (Mr.)</option>
+                        <option value="Smt">Smt (Mrs.)</option>
+                        <option value="Kumari">Kumari (Ms.)</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="applicant_gender">Gender <span class="required">*</span></label>
+                      <select id="applicant_gender" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Transgender">Transgender</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="applicant_last_name">Last Name / Surname <span class="required">*</span></label>
+                    <input type="text" id="applicant_last_name" placeholder="Surname" required />
+                  </div>
+
+                  <div class="form-row-2">
+                    <div class="form-group">
+                      <label for="applicant_first_name">First Name <span class="required">*</span></label>
+                      <input type="text" id="applicant_first_name" placeholder="First Name" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="applicant_middle_name">Middle Name</label>
+                      <input type="text" id="applicant_middle_name" placeholder="Middle Name" />
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="applicant_pan_card_name">Name to be Printed on PAN Card <span class="required">*</span></label>
+                    <input type="text" id="applicant_pan_card_name" placeholder="Full name as to appear on PAN" required />
+                    <span class="form-hint">Auto-filled from First, Middle, and Last name</span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="applicant_dob">Date of Birth <span class="required">*</span></label>
+                    <input type="date" id="applicant_dob" required />
+                  </div>
+
+                  <div class="form-divider"><span>Parent Details</span></div>
+
+                  <div class="form-group">
+                    <label for="father_name">Father's Full Name <span class="required">*</span></label>
+                    <input type="text" id="father_name" placeholder="Father's full name" required />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="mother_name">Mother's Full Name (Optional)</label>
+                    <input type="text" id="mother_name" placeholder="Mother's name" />
+                  </div>
+
+                  <div class="form-group">
+                    <label>Select Parent Name to be printed on PAN <span class="required">*</span></label>
+                    <div class="radio-pill-group">
+                      <label class="radio-pill">
+                        <input type="radio" name="parent_print_pref" value="Father" checked />
+                        <span>Father's Name</span>
+                      </label>
+                      <label class="radio-pill">
+                        <input type="radio" name="parent_print_pref" value="Mother" />
+                        <span>Mother's Name</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-divider"><span>Identity & Aadhaar</span></div>
+
+                  <div class="form-group">
+                    <label for="aadhaar_number">Aadhaar Number (12 Digits) <span class="required">*</span></label>
+                    <input type="text" id="aadhaar_number" maxlength="12" placeholder="1234 5678 9012" pattern="[0-9]{12}" required />
+                    <span class="form-hint">Mandatory for Indian resident applicants under IT Act</span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="name_as_aadhaar">Name Exactly as in Aadhaar <span class="required">*</span></label>
+                    <input type="text" id="name_as_aadhaar" placeholder="Name as per Aadhaar Card" required />
+                  </div>
+                </div>
+
+                <!-- STEP 2: CONTACT DETAILS -->
+                <div class="wizard-step-content hidden" id="step-2-content">
+                  <div class="step-intro">
+                    <p>Contact details are used for PAN dispatch tracking, SMS status updates, and digital e-PAN delivery.</p>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="contact_country_code">Telephone ISD Code</label>
+                    <input type="text" id="contact_country_code" value="+91 (India)" readonly class="bg-readonly" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="contact_mobile">Mobile Number <span class="required">*</span></label>
+                    <div class="input-prefix-group">
+                      <span class="input-prefix">+91</span>
+                      <input type="tel" id="contact_mobile" maxlength="10" placeholder="10-digit primary mobile" pattern="[0-9]{10}" required />
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="contact_email">Email Address <span class="required">*</span></label>
+                    <input type="email" id="contact_email" placeholder="e.g. yourname@domain.com" required />
+                    <span class="form-hint">Your digitally signed e-PAN card will be delivered to this email</span>
+                  </div>
+
+                  <div class="card-notice">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <div>
+                      <strong>OTP Verification Option:</strong>
+                      <p>In production, an OTP is dispatched to this mobile and email before official submission.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- STEP 3: ADDRESS DETAILS -->
+                <div class="wizard-step-content hidden" id="step-3-content">
+                  <div class="step-intro">
+                    <p>Enter communication address where the physical laminated PAN card will be delivered by Speed Post.</p>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="addr_flat">Flat / Room / Door / Block No. <span class="required">*</span></label>
+                    <input type="text" id="addr_flat" placeholder="e.g. Flat 402, Shivam Enclave" required />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="addr_premises">Name of Premises / Building / Village</label>
+                    <input type="text" id="addr_premises" placeholder="Building or Village Name" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="addr_street">Road / Street / Lane / Post Office <span class="required">*</span></label>
+                    <input type="text" id="addr_street" placeholder="Street or Post Office" required />
+                  </div>
+
+                  <div class="form-row-2">
+                    <div class="form-group">
+                      <label for="addr_locality">Area / Locality / Taluka <span class="required">*</span></label>
+                      <input type="text" id="addr_locality" placeholder="Area / Taluka" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="addr_city">Town / City / District <span class="required">*</span></label>
+                      <input type="text" id="addr_city" placeholder="City / District" required />
+                    </div>
+                  </div>
+
+                  <div class="form-row-2">
+                    <div class="form-group">
+                      <label for="addr_state">State / Union Territory <span class="required">*</span></label>
+                      <select id="addr_state" required>
+                        <option value="">Select State</option>
+                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                        <option value="Assam">Assam</option>
+                        <option value="Bihar">Bihar</option>
+                        <option value="Chhattisgarh">Chhattisgarh</option>
+                        <option value="Delhi">Delhi (NCT)</option>
+                        <option value="Goa">Goa</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Haryana">Haryana</option>
+                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                        <option value="Jharkhand">Jharkhand</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Kerala">Kerala</option>
+                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Manipur">Manipur</option>
+                        <option value="Meghalaya">Meghalaya</option>
+                        <option value="Mizoram">Mizoram</option>
+                        <option value="Nagaland">Nagaland</option>
+                        <option value="Odisha">Odisha</option>
+                        <option value="Punjab">Punjab</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Sikkim">Sikkim</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="Tripura">Tripura</option>
+                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        <option value="Uttarakhand">Uttarakhand</option>
+                        <option value="West Bengal">West Bengal</option>
+                        <option value="Other">Other / UT</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="addr_pincode">PIN Code <span class="required">*</span></label>
+                      <input type="text" id="addr_pincode" maxlength="6" placeholder="6-digit PIN" pattern="[0-9]{6}" required />
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="addr_country">Country</label>
+                    <input type="text" id="addr_country" value="India" readonly class="bg-readonly" />
+                  </div>
+
+                  <label class="checkbox-container mt-2">
+                    <input type="checkbox" id="addr_same_perm" checked />
+                    <span class="custom-checkmark"></span>
+                    <span class="checkbox-label">Permanent address is same as communication address</span>
+                  </label>
+                </div>
+
+                <!-- STEP 4: DOCUMENT UPLOADS -->
+                <div class="wizard-step-content hidden" id="step-4-content">
+                  <div class="step-intro">
+                    <p>Upload clear photos or scans of your proof documents. Max 5MB per document (JPG, PNG, PDF supported).</p>
+                  </div>
+
+                  <!-- Document 1: Identity Proof -->
+                  <div class="doc-upload-card" data-doc-type="identity_proof">
+                    <div class="doc-upload-header">
+                      <div class="doc-icon"><i class="fa-solid fa-id-badge"></i></div>
+                      <div class="doc-meta">
+                        <h5>Proof of Identity (POI) <span class="required">*</span></h5>
+                        <select id="sel_doc_poi" class="select-sm">
+                          <option value="Aadhaar Card">Aadhaar Card issued by UIDAI</option>
+                          <option value="Passport">Passport</option>
+                          <option value="Voter ID">Voter ID Card</option>
+                          <option value="Driving License">Driving License</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="upload-zone" id="zone-poi">
+                      <input type="file" id="file-poi" accept="image/*,.pdf" class="file-hidden" />
+                      <div class="upload-zone-prompt">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Click or Tap to Upload</span>
+                        <small>Camera / Gallery / PDF</small>
+                      </div>
+                      <div class="doc-preview-wrap hidden" id="preview-poi">
+                        <img src="" alt="POI Preview" class="preview-thumbnail" />
+                        <div class="preview-info">
+                          <span class="preview-name">doc.jpg</span>
+                          <span class="preview-size">145 KB</span>
+                        </div>
+                        <button type="button" class="btn-remove-doc" data-target="poi"><i class="fa-solid fa-trash-can"></i></button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Document 2: Address Proof -->
+                  <div class="doc-upload-card" data-doc-type="address_proof">
+                    <div class="doc-upload-header">
+                      <div class="doc-icon"><i class="fa-solid fa-house-chimney"></i></div>
+                      <div class="doc-meta">
+                        <h5>Proof of Address (POA) <span class="required">*</span></h5>
+                        <select id="sel_doc_poa" class="select-sm">
+                          <option value="Aadhaar Card">Aadhaar Card issued by UIDAI</option>
+                          <option value="Electricity Bill">Electricity Bill (less than 3 months)</option>
+                          <option value="Bank Account Statement">Bank Account Statement</option>
+                          <option value="Voter ID Card">Voter ID Card</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="upload-zone" id="zone-poa">
+                      <input type="file" id="file-poa" accept="image/*,.pdf" class="file-hidden" />
+                      <div class="upload-zone-prompt">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Click or Tap to Upload</span>
+                        <small>Camera / Gallery / PDF</small>
+                      </div>
+                      <div class="doc-preview-wrap hidden" id="preview-poa">
+                        <img src="" alt="POA Preview" class="preview-thumbnail" />
+                        <div class="preview-info">
+                          <span class="preview-name">poa.jpg</span>
+                          <span class="preview-size">180 KB</span>
+                        </div>
+                        <button type="button" class="btn-remove-doc" data-target="poa"><i class="fa-solid fa-trash-can"></i></button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Document 3: Date of Birth Proof -->
+                  <div class="doc-upload-card" data-doc-type="dob_proof">
+                    <div class="doc-upload-header">
+                      <div class="doc-icon"><i class="fa-solid fa-cake-candles"></i></div>
+                      <div class="doc-meta">
+                        <h5>Proof of Date of Birth (DOB) <span class="required">*</span></h5>
+                        <select id="sel_doc_dob" class="select-sm">
+                          <option value="Aadhaar Card">Aadhaar Card issued by UIDAI</option>
+                          <option value="Birth Certificate">Birth Certificate</option>
+                          <option value="Matriculation Certificate">Matriculation / 10th Marksheet</option>
+                          <option value="Passport">Passport</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="upload-zone" id="zone-dob">
+                      <input type="file" id="file-dob" accept="image/*,.pdf" class="file-hidden" />
+                      <div class="upload-zone-prompt">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Click or Tap to Upload</span>
+                        <small>Camera / Gallery / PDF</small>
+                      </div>
+                      <div class="doc-preview-wrap hidden" id="preview-dob">
+                        <img src="" alt="DOB Preview" class="preview-thumbnail" />
+                        <div class="preview-info">
+                          <span class="preview-name">dob.jpg</span>
+                          <span class="preview-size">120 KB</span>
+                        </div>
+                        <button type="button" class="btn-remove-doc" data-target="dob"><i class="fa-solid fa-trash-can"></i></button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Document 4: Photograph -->
+                  <div class="doc-upload-card" data-doc-type="photo">
+                    <div class="doc-upload-header">
+                      <div class="doc-icon"><i class="fa-solid fa-camera"></i></div>
+                      <div class="doc-meta">
+                        <h5>Applicant Photograph (Passport Size) <span class="required">*</span></h5>
+                        <span class="form-hint">White background, clear front face</span>
+                      </div>
+                    </div>
+                    <div class="upload-zone" id="zone-photo">
+                      <input type="file" id="file-photo" accept="image/*" class="file-hidden" />
+                      <div class="upload-zone-prompt">
+                        <i class="fa-solid fa-camera-retro"></i>
+                        <span>Tap to Capture Photo or Upload</span>
+                        <small>JPG / PNG (Square or Passport Ratio)</small>
+                      </div>
+                      <div class="doc-preview-wrap hidden" id="preview-photo">
+                        <img src="" alt="Photo Preview" class="preview-thumbnail photo-crop" />
+                        <div class="preview-info">
+                          <span class="preview-name">photo.jpg</span>
+                          <span class="preview-size">95 KB</span>
+                        </div>
+                        <button type="button" class="btn-remove-doc" data-target="photo"><i class="fa-solid fa-trash-can"></i></button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Document 5: Signature -->
+                  <div class="doc-upload-card" data-doc-type="signature">
+                    <div class="doc-upload-header">
+                      <div class="doc-icon"><i class="fa-solid fa-signature"></i></div>
+                      <div class="doc-meta">
+                        <h5>Applicant Signature <span class="required">*</span></h5>
+                        <span class="form-hint">Upload image or draw directly with finger/stylus</span>
+                      </div>
+                    </div>
+                    
+                    <div class="sig-options-tabs">
+                      <button type="button" class="sig-tab-btn active" id="tab-sig-upload">Upload File</button>
+                      <button type="button" class="sig-tab-btn" id="tab-sig-draw">Draw on Screen</button>
+                    </div>
+
+                    <div id="sig-upload-container">
+                      <div class="upload-zone" id="zone-signature">
+                        <input type="file" id="file-signature" accept="image/*" class="file-hidden" />
+                        <div class="upload-zone-prompt">
+                          <i class="fa-solid fa-file-signature"></i>
+                          <span>Tap to Upload Signature Image</span>
+                          <small>Black or blue ink on plain white paper</small>
+                        </div>
+                        <div class="doc-preview-wrap hidden" id="preview-signature">
+                          <img src="" alt="Signature Preview" class="preview-thumbnail" />
+                          <div class="preview-info">
+                            <span class="preview-name">signature.png</span>
+                            <span class="preview-size">65 KB</span>
+                          </div>
+                          <button type="button" class="btn-remove-doc" data-target="signature"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div id="sig-draw-container" class="hidden">
+                      <div class="canvas-wrap">
+                        <canvas id="sig-canvas" width="340" height="130"></canvas>
+                        <div class="canvas-actions">
+                          <button type="button" id="btn-clear-canvas" class="btn-sm-text"><i class="fa-solid fa-rotate-left"></i> Clear</button>
+                          <button type="button" id="btn-save-canvas" class="btn-sm-primary"><i class="fa-solid fa-check"></i> Use This Signature</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- STEP 5: REVIEW & DECLARATION -->
+                <div class="wizard-step-content hidden" id="step-5-content">
+                  <div class="step-intro">
+                    <p>Carefully verify all details before proceeding to payment. You can tap "Edit" on any section.</p>
+                  </div>
+
+                  <!-- Review Box: Personal -->
+                  <div class="review-section-box">
+                    <div class="review-box-header">
+                      <h5><i class="fa-regular fa-user"></i> Personal Information</h5>
+                      <button type="button" class="btn-review-edit" data-goto-step="1"><i class="fa-solid fa-pen"></i> Edit</button>
+                    </div>
+                    <div class="review-grid">
+                      <div class="review-item"><span>Full Name</span><strong id="rev-full-name">—</strong></div>
+                      <div class="review-item"><span>Name on PAN</span><strong id="rev-pan-name">—</strong></div>
+                      <div class="review-item"><span>Date of Birth</span><strong id="rev-dob">—</strong></div>
+                      <div class="review-item"><span>Gender</span><strong id="rev-gender">—</strong></div>
+                      <div class="review-item"><span>Father's Name</span><strong id="rev-father">—</strong></div>
+                      <div class="review-item"><span>Aadhaar Number</span><strong id="rev-aadhaar">•••• •••• ••••</strong></div>
+                    </div>
+                  </div>
+
+                  <!-- Review Box: Contact & Address -->
+                  <div class="review-section-box">
+                    <div class="review-box-header">
+                      <h5><i class="fa-solid fa-location-dot"></i> Contact & Address</h5>
+                      <button type="button" class="btn-review-edit" data-goto-step="2"><i class="fa-solid fa-pen"></i> Edit</button>
+                    </div>
+                    <div class="review-grid">
+                      <div class="review-item"><span>Mobile</span><strong id="rev-mobile">—</strong></div>
+                      <div class="review-item"><span>Email</span><strong id="rev-email">—</strong></div>
+                      <div class="review-item full"><span>Communication Address</span><strong id="rev-address">—</strong></div>
+                    </div>
+                  </div>
+
+                  <!-- Review Box: Uploaded Documents -->
+                  <div class="review-section-box">
+                    <div class="review-box-header">
+                      <h5><i class="fa-solid fa-paperclip"></i> Uploaded Documents</h5>
+                      <button type="button" class="btn-review-edit" data-goto-step="4"><i class="fa-solid fa-pen"></i> Edit</button>
+                    </div>
+                    <div class="review-docs-list" id="rev-docs-list">
+                      <!-- Dynamically rendered -->
+                    </div>
+                  </div>
+
+                  <!-- Review Box: Fee Breakdown -->
+                  <div class="review-section-box fee-box">
+                    <div class="review-box-header">
+                      <h5><i class="fa-solid fa-receipt"></i> Application Fee Details</h5>
+                    </div>
+                    <div class="fee-breakdown-table">
+                      <div class="fee-row">
+                        <span>PAN Application Fee (Form 49A)</span>
+                        <strong id="rev-fee-base">₹157.00</strong>
+                      </div>
+                      <div class="fee-row">
+                        <span>Physical Dispatch & Lamination</span>
+                        <strong class="text-green">Included (₹0.00)</strong>
+                      </div>
+                      <div class="fee-row">
+                        <span>Portal Convenience & Security</span>
+                        <strong class="text-green">Included (₹0.00)</strong>
+                      </div>
+                      <div class="fee-row total">
+                        <span>Total Payable</span>
+                        <strong class="total-amt" id="rev-fee-total">₹157.00</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Declaration Checkbox -->
+                  <div class="consent-box">
+                    <label class="checkbox-container">
+                      <input type="checkbox" id="chk-declaration" required />
+                      <span class="custom-checkmark"></span>
+                      <span class="checkbox-label">
+                        I hereby declare that whatever stated above is true to the best of my knowledge and belief. I have enclosed necessary proof documents for verification.
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- STEP 6: PAYMENT -->
+                <div class="wizard-step-content hidden" id="step-6-content">
+                  <div class="step-intro">
+                    <p>Complete payment securely via UPI, Card, Net Banking, or Wallet.</p>
+                  </div>
+
+                  <!-- Fee summary card -->
+                  <div class="payment-amount-hero">
+                    <span class="pay-label">Total Amount Payable</span>
+                    <h2 class="pay-amount" id="pay-screen-amount">₹157</h2>
+                    <span class="pay-security"><i class="fa-solid fa-shield-halved"></i> 256-Bit Encrypted Gateway Simulation</span>
+                  </div>
+
+                  <!-- Payment Method Selection -->
+                  <div class="payment-methods-card">
+                    <h5>Select Payment Method</h5>
+                    
+                    <!-- Method 1: UPI / QR -->
+                    <label class="pay-method-option selected">
+                      <input type="radio" name="pay_method" value="upi" checked />
+                      <div class="pay-method-label">
+                        <div class="pay-icons-row">
+                          <i class="fa-solid fa-qrcode text-indigo"></i>
+                          <span>UPI / QR Code (Google Pay, PhonePe, Paytm)</span>
+                        </div>
+                        <span class="pay-badge green">Instant</span>
+                      </div>
+                    </label>
+
+                    <div id="upi-details-pane" class="pay-method-details">
+                      <div class="qr-mock-box">
+                        <div class="qr-code-graphic">
+                          <i class="fa-solid fa-qrcode qr-large"></i>
+                          <div class="qr-center-logo"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                        </div>
+                        <p class="qr-scan-text">Scan with any UPI App or use VPA</p>
+                        <div class="upi-app-buttons">
+                          <span class="upi-pill">GPay</span>
+                          <span class="upi-pill">PhonePe</span>
+                          <span class="upi-pill">Paytm</span>
+                          <span class="upi-pill">BHIM</span>
+                        </div>
+                      </div>
+                      <div class="form-group mt-3">
+                        <label for="upi_vpa">Enter UPI ID / VPA</label>
+                        <input type="text" id="upi_vpa" placeholder="e.g. mobile@upi or username@okhdfcbank" value="user@okhdfcbank" />
+                      </div>
+                    </div>
+
+                    <!-- Method 2: Debit / Credit Card -->
+                    <label class="pay-method-option">
+                      <input type="radio" name="pay_method" value="card" />
+                      <div class="pay-method-label">
+                        <div class="pay-icons-row">
+                          <i class="fa-regular fa-credit-card text-blue"></i>
+                          <span>Debit / Credit Card (Visa, RuPay, MasterCard)</span>
+                        </div>
+                      </div>
+                    </label>
+
+                    <div id="card-details-pane" class="pay-method-details hidden">
+                      <div class="form-group">
+                        <label for="card_num">Card Number</label>
+                        <input type="text" id="card_num" maxlength="19" placeholder="4111 •••• •••• 1111" value="4111 2222 3333 4444" />
+                      </div>
+                      <div class="form-row-2">
+                        <div class="form-group">
+                          <label for="card_exp">Expiry</label>
+                          <input type="text" id="card_exp" placeholder="MM/YY" maxlength="5" value="12/28" />
+                        </div>
+                        <div class="form-group">
+                          <label for="card_cvv">CVV</label>
+                          <input type="password" id="card_cvv" placeholder="•••" maxlength="3" value="123" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Method 3: Net Banking -->
+                    <label class="pay-method-option">
+                      <input type="radio" name="pay_method" value="netbanking" />
+                      <div class="pay-method-label">
+                        <div class="pay-icons-row">
+                          <i class="fa-solid fa-building-columns text-amber"></i>
+                          <span>Net Banking</span>
+                        </div>
+                      </div>
+                    </label>
+
+                    <div id="netbanking-details-pane" class="pay-method-details hidden">
+                      <select id="sel_bank">
+                        <option value="SBI">State Bank of India (SBI)</option>
+                        <option value="HDFC">HDFC Bank</option>
+                        <option value="ICICI">ICICI Bank</option>
+                        <option value="Axis">Axis Bank</option>
+                        <option value="PNB">Punjab National Bank</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Simulated Gateway Processing Overlay -->
+                  <div id="pay-processing-modal" class="modal-overlay hidden">
+                    <div class="modal-card modal-center">
+                      <div class="spinner-large"></div>
+                      <h4 id="pay-status-heading">Processing Payment...</h4>
+                      <p id="pay-status-sub">Connecting securely to payment gateway...</p>
+                      <div class="simulation-badge">
+                        <i class="fa-solid fa-shield"></i> Verified Gateway Environment
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- STEP 7: SUBMISSION & CONFIRMATION -->
+                <div class="wizard-step-content hidden" id="step-7-content">
+                  <div class="confirmation-success-wrap">
+                    <div class="success-check-bubble">
+                      <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h3 class="success-title">Application Submitted!</h3>
+                    <p class="success-sub">Your PAN card facilitation application has been received successfully.</p>
+                    
+                    <div class="confirmation-ticket-card">
+                      <div class="ticket-header">
+                        <span>Application Acknowledgement</span>
+                        <span class="ticket-status-pill">Under Review</span>
+                      </div>
+                      <div class="ticket-body">
+                        <div class="ticket-row">
+                          <span class="label">Internal Application ID</span>
+                          <span class="value font-mono highlight" id="conf-app-id">PAN-2026-XXXXX</span>
+                        </div>
+                        <div class="ticket-row">
+                          <span class="label">Applicant Name</span>
+                          <span class="value" id="conf-app-name">—</span>
+                        </div>
+                        <div class="ticket-row">
+                          <span class="label">Transaction Reference</span>
+                          <span class="value font-mono" id="conf-txn-id">TXN-••••••••</span>
+                        </div>
+                        <div class="ticket-row">
+                          <span class="label">Amount Paid</span>
+                          <span class="value text-green font-bold" id="conf-amount">₹157.00 (Successful)</span>
+                        </div>
+                        <div class="ticket-row">
+                          <span class="label">Date & Time</span>
+                          <span class="value" id="conf-timestamp">—</span>
+                        </div>
+                        <div class="ticket-row">
+                          <span class="label">Official Provider Status</span>
+                          <span class="value text-muted" id="conf-provider-status">Pending Review & Transmission</span>
+                        </div>
+                      </div>
+                      <div class="ticket-footer-notice">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span>An admin will inspect your identity documents. You can track live verification anytime.</span>
+                      </div>
+                    </div>
+
+                    <div class="confirmation-actions">
+                      <button type="button" id="btn-download-receipt" class="btn-android-secondary w-full">
+                        <i class="fa-solid fa-file-arrow-down"></i>
+                        <span>Download Application Receipt</span>
+                      </button>
+                      <button type="button" id="btn-track-this-app" class="btn-android-primary w-full mt-2">
+                        <i class="fa-solid fa-magnifying-glass-location"></i>
+                        <span>Track Application Live</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Sticky Wizard Navigation Controls -->
+                <div class="wizard-bottom-bar" id="wizard-bottom-bar">
+                  <button type="button" id="btn-wizard-prev" class="btn-nav-prev hidden">
+                    <i class="fa-solid fa-chevron-left"></i> Previous
+                  </button>
+                  <button type="button" id="btn-wizard-next" class="btn-nav-next">
+                    <span>Continue</span> <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                </div>
+              </form>
+            </section>
+
+            <!-- SCREEN 5: MY APPLICATIONS -->
+            <section id="screen-applications" class="screen-view">
+              <div class="screen-header-row">
+                <h3>My Applications</h3>
+                <span class="count-pill" id="my-apps-count">0</span>
+              </div>
+
+              <!-- Filter Pills -->
+              <div class="filter-pills-scroll">
+                <button class="filter-pill active" data-app-filter="all">All</button>
+                <button class="filter-pill" data-app-filter="Under Review">Pending Review</button>
+                <button class="filter-pill" data-app-filter="Processing">Processing</button>
+                <button class="filter-pill" data-app-filter="Completed">Completed</button>
+                <button class="filter-pill" data-app-filter="Action Required">Action Required</button>
+              </div>
+
+              <!-- Applications List Container -->
+              <div class="applications-list" id="user-applications-list">
+                <!-- Dynamically rendered or empty state -->
+                <div class="empty-state-card" id="empty-apps-state">
+                  <i class="fa-regular fa-folder-open empty-icon"></i>
+                  <h4>No Applications Yet</h4>
+                  <p>You haven't submitted any PAN applications yet. Start a new application in minutes.</p>
+                  <button class="btn-android-primary mt-3" id="btn-empty-start-app">
+                    <i class="fa-solid fa-plus"></i> Apply Now
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- SCREEN 6: TRACK APPLICATION -->
+            <section id="screen-track" class="screen-view">
+              <div class="screen-header-row">
+                <h3>Track Application Status</h3>
+              </div>
+
+              <div class="track-search-card">
+                <label for="track-app-id-input">Enter Application Reference ID</label>
+                <div class="search-input-group">
+                  <input type="text" id="track-app-id-input" placeholder="e.g. PAN-2026-1001" />
+                  <button id="btn-perform-track" class="btn-search-action"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+              </div>
+
+              <!-- Track Results Container -->
+              <div id="track-results-container" class="track-results-wrap hidden">
+                <div class="track-header-card">
+                  <div class="track-header-left">
+                    <span class="track-id-badge" id="track-card-id">PAN-2026-1001</span>
+                    <h4 id="track-card-applicant">Ramesh Kumar</h4>
+                    <span class="track-type-badge">Form 49A • Individual New PAN</span>
+                  </div>
+                  <div class="track-status-badge" id="track-card-status">Under Review</div>
+                </div>
+
+                <!-- Modern Android Timeline -->
+                <div class="timeline-container" id="track-timeline">
+                  <!-- Step 1: Draft -->
+                  <div class="timeline-step completed" id="t-step-draft">
+                    <div class="timeline-node"><i class="fa-solid fa-check"></i></div>
+                    <div class="timeline-info">
+                      <h5>Draft Created</h5>
+                      <p>Application form filled and drafted</p>
+                      <span class="timeline-time" id="t-time-draft">—</span>
+                    </div>
+                  </div>
+
+                  <!-- Step 2: Submitted -->
+                  <div class="timeline-step completed" id="t-step-submitted">
+                    <div class="timeline-node"><i class="fa-solid fa-check"></i></div>
+                    <div class="timeline-info">
+                      <h5>Application Submitted</h5>
+                      <p>Applicant submitted personal & address details</p>
+                      <span class="timeline-time" id="t-time-submitted">—</span>
+                    </div>
+                  </div>
+
+                  <!-- Step 3: Payment Confirmed -->
+                  <div class="timeline-step completed" id="t-step-paid">
+                    <div class="timeline-node"><i class="fa-solid fa-check"></i></div>
+                    <div class="timeline-info">
+                      <h5>Payment Confirmed</h5>
+                      <p id="t-pay-info">₹157.00 received via UPI/Gateway</p>
+                      <span class="timeline-time" id="t-time-paid">—</span>
+                    </div>
+                  </div>
+
+                  <!-- Step 4: Documents Under Review -->
+                  <div class="timeline-step current" id="t-step-docs">
+                    <div class="timeline-node"><i class="fa-solid fa-file-lines"></i></div>
+                    <div class="timeline-info">
+                      <h5>Documents Under Review</h5>
+                      <p id="t-doc-info">Admin verifying Identity, Address & DOB proofs</p>
+                      <span class="timeline-time" id="t-time-docs">In Progress</span>
+                    </div>
+                  </div>
+
+                  <!-- Step 5: Submitted to Authorized Provider -->
+                  <div class="timeline-step pending" id="t-step-provider">
+                    <div class="timeline-node"><i class="fa-solid fa-building-flag"></i></div>
+                    <div class="timeline-info">
+                      <h5>Authorized Provider Transmission</h5>
+                      <p id="t-provider-info">Queued for submission to authorized PAN provider</p>
+                      <span class="timeline-time" id="t-time-provider">Pending Verification</span>
+                    </div>
+                  </div>
+
+                  <!-- Step 6: Processing & Generation -->
+                  <div class="timeline-step pending" id="t-step-processing">
+                    <div class="timeline-node"><i class="fa-solid fa-gears"></i></div>
+                    <div class="timeline-info">
+                      <h5>PAN Processing & Verification</h5>
+                      <p>Income Tax verification & PAN allotment</p>
+                      <span class="timeline-time" id="t-time-processing">Pending</span>
+                    </div>
+                  </div>
+
+                  <!-- Step 7: Completed & Dispatched -->
+                  <div class="timeline-step pending" id="t-step-completed">
+                    <div class="timeline-node"><i class="fa-solid fa-envelope-open-text"></i></div>
+                    <div class="timeline-info">
+                      <h5>PAN Allotted & Dispatched</h5>
+                      <p>e-PAN sent to email; physical card dispatched via Speed Post</p>
+                      <span class="timeline-time" id="t-time-completed">Pending</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Action Button in Tracking -->
+                <div class="track-actions-row">
+                  <button id="btn-track-view-details" class="btn-android-secondary flex-1">
+                    <i class="fa-solid fa-eye"></i> View Full Application
+                  </button>
+                  <button id="btn-track-support" class="btn-android-outline flex-1">
+                    <i class="fa-solid fa-headset"></i> Need Help?
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- SCREEN 7: USER DOCUMENT CENTER -->
+            <section id="screen-documents" class="screen-view">
+              <div class="screen-header-row">
+                <h3>My Documents Center</h3>
+              </div>
+              <p class="section-subtext">Manage, preview, and re-upload required identity, address, and signature proofs for your active applications.</p>
+
+              <!-- App Selector Dropdown if user has multiple apps -->
+              <div class="form-group mb-3">
+                <label for="sel-user-docs-app">Select Application</label>
+                <select id="sel-user-docs-app" class="select-modern">
+                  <!-- Populated dynamically -->
+                </select>
+              </div>
+
+              <!-- Documents Cards Container -->
+              <div class="user-docs-grid" id="user-docs-grid">
+                <!-- Dynamically rendered -->
+              </div>
+            </section>
+
+            <!-- SCREEN 8: PAYMENTS HISTORY -->
+            <section id="screen-payments" class="screen-view">
+              <div class="screen-header-row">
+                <h3>Payment History</h3>
+              </div>
+
+              <div class="payments-list" id="user-payments-list">
+                <!-- Populated dynamically -->
+              </div>
+            </section>
+
+            <!-- SCREEN 9: NOTIFICATIONS -->
+            <section id="screen-notifications" class="screen-view">
+              <div class="screen-header-row">
+                <h3>Notifications</h3>
+                <button id="btn-mark-all-read" class="btn-sm-text">Mark all read</button>
+              </div>
+
+              <div class="notifications-list" id="user-notifications-list">
+                <!-- Populated dynamically -->
+              </div>
+            </section>
+
+            <!-- SCREEN 10: USER PROFILE -->
+            <section id="screen-profile" class="screen-view">
+              <div class="profile-hero-card">
+                <div class="profile-avatar-circle">
+                  <span id="profile-initials">U</span>
+                </div>
+                <h3 id="profile-full-name">Ramesh Kumar</h3>
+                <p id="profile-email-phone">user@example.com • +91 9876543210</p>
+                <span class="profile-joined-badge" id="profile-joined-date">Member since Sept 2026</span>
+              </div>
+
+              <div class="profile-menu-card">
+                <button class="profile-menu-item" id="p-menu-edit">
+                  <div class="item-left"><i class="fa-solid fa-user-pen"></i> <span>Edit Profile Details</span></div>
+                  <i class="fa-solid fa-chevron-right arrow"></i>
+                </button>
+                <button class="profile-menu-item" id="p-menu-password">
+                  <div class="item-left"><i class="fa-solid fa-key"></i> <span>Change Password</span></div>
+                  <i class="fa-solid fa-chevron-right arrow"></i>
+                </button>
+                <button class="profile-menu-item" id="p-menu-notifications">
+                  <div class="item-left"><i class="fa-solid fa-bell"></i> <span>Notification Preferences</span></div>
+                  <i class="fa-solid fa-chevron-right arrow"></i>
+                </button>
+                <button class="profile-menu-item" id="p-menu-terms">
+                  <div class="item-left"><i class="fa-solid fa-file-contract"></i> <span>Terms & Conditions</span></div>
+                  <i class="fa-solid fa-chevron-right arrow"></i>
+                </button>
+                <button class="profile-menu-item" id="p-menu-privacy">
+                  <div class="item-left"><i class="fa-solid fa-user-shield"></i> <span>Privacy & Data Security Policy</span></div>
+                  <i class="fa-solid fa-chevron-right arrow"></i>
+                </button>
+              </div>
+
+              <div class="profile-logout-wrap">
+                <button id="btn-user-logout" class="btn-logout">
+                  <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+                </button>
+              </div>
+            </section>
+
+            <!-- SCREEN 11: HELP & SUPPORT -->
+            <section id="screen-help" class="screen-view">
+              <div class="screen-header-row">
+                <h3>Help & Support</h3>
+              </div>
+
+              <!-- FAQ Accordion -->
+              <div class="help-section-card">
+                <h4><i class="fa-solid fa-circle-question"></i> Frequently Asked Questions</h4>
+                
+                <div class="faq-item">
+                  <div class="faq-question">
+                    <span>What is the configured application fee?</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                  </div>
+                  <div class="faq-answer">
+                    <p>The standard PAN facilitation fee is configured at <strong>₹157</strong>. This covers application filing, document inspection, laminated physical card dispatch by India Post, and digital e-PAN delivery.</p>
+                  </div>
+                </div>
+
+                <div class="faq-item">
+                  <div class="faq-question">
+                    <span>What documents are required for PAN application?</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                  </div>
+                  <div class="faq-answer">
+                    <p>You need three proofs: Proof of Identity (Aadhaar, Passport, Voter ID), Proof of Address (Aadhaar, Utility Bill, Bank statement), Proof of Date of Birth (Aadhaar, Birth Certificate, 10th marksheet), plus 1 passport size photograph and signature.</p>
+                  </div>
+                </div>
+
+                <div class="faq-item">
+                  <div class="faq-question">
+                    <span>What happens if my document is rejected?</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                  </div>
+                  <div class="faq-answer">
+                    <p>If a document is unclear or invalid, our admin marks it with a specific reason. You will receive an immediate notification and can re-upload a clearer copy from "My Documents" without paying any extra fee.</p>
+                  </div>
+                </div>
+
+                <div class="faq-item">
+                  <div class="faq-question">
+                    <span>Is this the official Income Tax portal?</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                  </div>
+                  <div class="faq-answer">
+                    <p>No. This portal is a facilitation and demo platform. It does not falsely represent itself as the Income Tax Department, UTIITSL, or Protean. When running in Sandbox mode, applications are simulated for processing.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Raise Support Ticket -->
+              <div class="help-section-card mt-3">
+                <div class="section-title-row">
+                  <h4><i class="fa-solid fa-ticket"></i> Support Tickets</h4>
+                  <button id="btn-open-ticket-modal" class="btn-sm-primary">+ New Ticket</button>
+                </div>
+                <div class="tickets-list" id="user-tickets-list">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+            </section>
+          </main>
+
+          <!-- Android Bottom Navigation Bar -->
+          <nav class="android-bottom-nav" id="user-bottom-nav">
+            <button class="nav-item active" data-screen="screen-home">
+              <i class="fa-solid fa-house"></i>
+              <span>Home</span>
+            </button>
+            <button class="nav-item" data-screen="screen-applications">
+              <i class="fa-solid fa-id-card"></i>
+              <span>Applications</span>
+            </button>
+            <button class="nav-item" data-screen="screen-documents">
+              <i class="fa-solid fa-folder-closed"></i>
+              <span>Documents</span>
+            </button>
+            <button class="nav-item" data-screen="screen-help">
+              <i class="fa-solid fa-headset"></i>
+              <span>Support</span>
+            </button>
+            <button class="nav-item" data-screen="screen-profile">
+              <i class="fa-solid fa-user"></i>
+              <span>Profile</span>
+            </button>
+          </nav>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- ADMIN PANEL CONTAINER (Management Console) -->
+        <!-- ============================================== -->
+        <div id="admin-portal-container" class="portal-container hidden">
+          <!-- Admin Header Bar -->
+          <header class="admin-app-bar">
+            <div class="admin-brand">
+              <i class="fa-solid fa-shield-halved text-amber"></i>
+              <div>
+                <h2>PAN Admin Console</h2>
+                <span>Operations & Verification Portal</span>
+              </div>
+            </div>
+            <div class="admin-top-actions">
+              <button id="btn-admin-notifications" class="admin-icon-btn relative">
+                <i class="fa-solid fa-bell"></i>
+                <span class="badge-count admin-badge">3</span>
+              </button>
+              <button id="btn-admin-logout" class="admin-logout-btn" title="Sign out of Admin">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+              </button>
+            </div>
+          </header>
+
+          <!-- Admin Navigation Tabs (Scrollable on Mobile) -->
+          <nav class="admin-subnav" id="admin-subnav">
+            <button class="admin-nav-tab active" data-admin-view="view-admin-dashboard">
+              <i class="fa-solid fa-chart-pie"></i> Overview
+            </button>
+            <button class="admin-nav-tab" data-admin-view="view-admin-applications">
+              <i class="fa-solid fa-list-check"></i> Applications
+            </button>
+            <button class="admin-nav-tab" data-admin-view="view-admin-documents">
+              <i class="fa-solid fa-folder-tree"></i> Document Center
+            </button>
+            <button class="admin-nav-tab" data-admin-view="view-admin-payments">
+              <i class="fa-solid fa-indian-rupee-sign"></i> Payments
+            </button>
+            <button class="admin-nav-tab" data-admin-view="view-admin-users">
+              <i class="fa-solid fa-users-gear"></i> Users
+            </button>
+            <button class="admin-nav-tab" data-admin-view="view-admin-tickets">
+              <i class="fa-solid fa-headset"></i> Tickets
+            </button>
+            <button class="admin-nav-tab" data-admin-view="view-admin-broadcast">
+              <i class="fa-solid fa-bullhorn"></i> Broadcast
+            </button>
+            <button class="admin-nav-tab" data-admin-view="view-admin-reports">
+              <i class="fa-solid fa-chart-line"></i> Reports
+            </button>
+            <button class="admin-nav-tab" data-admin-view="view-admin-settings">
+              <i class="fa-solid fa-gear"></i> Fee Settings
+            </button>
+            <button class="admin-nav-tab" data-admin-view="view-admin-audit">
+              <i class="fa-solid fa-clock-rotate-left"></i> Audit Logs
+            </button>
+          </nav>
+
+          <!-- Admin Views Container -->
+          <div class="admin-content-viewport" id="admin-content-viewport">
+            
+            <!-- ADMIN VIEW 1: DASHBOARD STATS & OVERVIEW -->
+            <div id="view-admin-dashboard" class="admin-view active">
+              <div class="admin-welcome-banner">
+                <div class="banner-text">
+                  <h3>Operations Dashboard</h3>
+                  <p>Real-time PAN application pipeline and document verification statistics.</p>
+                </div>
+                <div class="admin-role-badge">
+                  <i class="fa-solid fa-user-shield"></i> Super Admin
+                </div>
+              </div>
+
+              <!-- Stat Metrics Grid -->
+              <div class="admin-stats-grid">
+                <div class="admin-stat-card">
+                  <div class="stat-header">
+                    <span>Total Applications</span>
+                    <i class="fa-solid fa-folder-closed text-indigo"></i>
+                  </div>
+                  <strong class="stat-value" id="adm-stat-total-apps">0</strong>
+                  <span class="stat-trend text-green"><i class="fa-solid fa-arrow-trend-up"></i> Live Pipeline</span>
+                </div>
+
+                <div class="admin-stat-card highlight-pending">
+                  <div class="stat-header">
+                    <span>Pending Verification</span>
+                    <i class="fa-solid fa-clock text-amber"></i>
+                  </div>
+                  <strong class="stat-value text-amber" id="adm-stat-pending-apps">0</strong>
+                  <span class="stat-trend">Requires Attention</span>
+                </div>
+
+                <div class="admin-stat-card">
+                  <div class="stat-header">
+                    <span>Total Revenue</span>
+                    <i class="fa-solid fa-indian-rupee-sign text-emerald"></i>
+                  </div>
+                  <strong class="stat-value text-emerald" id="adm-stat-revenue">₹0</strong>
+                  <span class="stat-trend" id="adm-stat-paid-count">0 successful payments</span>
+                </div>
+
+                <div class="admin-stat-card">
+                  <div class="stat-header">
+                    <span>Registered Users</span>
+                    <i class="fa-solid fa-users text-blue"></i>
+                  </div>
+                  <strong class="stat-value" id="adm-stat-total-users">0</strong>
+                  <span class="stat-trend">Active applicants</span>
+                </div>
+
+                <div class="admin-stat-card">
+                  <div class="stat-header">
+                    <span>Docs Rejected</span>
+                    <i class="fa-solid fa-circle-exclamation text-rose"></i>
+                  </div>
+                  <strong class="stat-value text-rose" id="adm-stat-rejected-docs">0</strong>
+                  <span class="stat-trend">Waiting for re-upload</span>
+                </div>
+
+                <div class="admin-stat-card">
+                  <div class="stat-header">
+                    <span>Completed PANs</span>
+                    <i class="fa-solid fa-circle-check text-green"></i>
+                  </div>
+                  <strong class="stat-value text-green" id="adm-stat-completed-apps">0</strong>
+                  <span class="stat-trend">Dispatched & Allotted</span>
+                </div>
+              </div>
+
+              <!-- Visual Analytics Cards -->
+              <div class="admin-analytics-row">
+                <div class="admin-chart-box">
+                  <div class="chart-header">
+                    <h4>Application Pipeline Breakdown</h4>
+                  </div>
+                  <div class="pipeline-progress-bars" id="pipeline-bars-container">
+                    <!-- Populated dynamically -->
+                  </div>
+                </div>
+
+                <div class="admin-chart-box">
+                  <div class="chart-header">
+                    <h4>Quick Admin Actions</h4>
+                  </div>
+                  <div class="quick-admin-actions-grid">
+                    <button class="adm-action-btn" id="adm-quick-review-first">
+                      <i class="fa-solid fa-magnifying-glass"></i>
+                      <span>Inspect Oldest Pending</span>
+                    </button>
+                    <button class="adm-action-btn" id="adm-quick-export-csv">
+                      <i class="fa-solid fa-file-csv"></i>
+                      <span>Export All (CSV)</span>
+                    </button>
+                    <button class="adm-action-btn" id="adm-quick-edit-fee">
+                      <i class="fa-solid fa-sliders"></i>
+                      <span>Configure Fee</span>
+                    </button>
+                    <button class="adm-action-btn" id="adm-quick-apk">
+                      <i class="fa-solid fa-android"></i>
+                      <span>APK / Export Tool</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ADMIN VIEW 2: ALL PAN APPLICATIONS TABLE -->
+            <div id="view-admin-applications" class="admin-view">
+              <div class="view-header-bar">
+                <div>
+                  <h3>All PAN Applications</h3>
+                  <p>Search, inspect, verify documents, and update statuses</p>
+                </div>
+                <button class="btn-sm-primary" id="btn-export-applications-csv">
+                  <i class="fa-solid fa-download"></i> Export CSV
+                </button>
+              </div>
+
+              <!-- Search and Filter Bar -->
+              <div class="admin-quick-filter-scroll">
+                <button class="adm-status-chip active" data-adm-status-filter="all">All Applications</button>
+                <button class="adm-status-chip" data-adm-status-filter="Under Review">Pending Review</button>
+                <button class="adm-status-chip" data-adm-status-filter="Documents Approved">Documents Approved</button>
+                <button class="adm-status-chip" data-adm-status-filter="Processing">Processing</button>
+                <button class="adm-status-chip" data-adm-status-filter="Action Required">Action Required</button>
+                <button class="adm-status-chip" data-adm-status-filter="Completed">Completed</button>
+                <button class="adm-status-chip" data-adm-status-filter="Rejected">Rejected</button>
+              </div>
+
+              <div class="admin-filter-bar">
+                <div class="admin-search-wrap">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <input type="text" id="adm-search-input" placeholder="Search by App ID, Name, Mobile, Email, Txn ID, or Aadhaar..." />
+                </div>
+                <div class="admin-filter-selects">
+                  <select id="adm-filter-status">
+                    <option value="">All Statuses</option>
+                    <option value="Under Review">Under Review</option>
+                    <option value="Documents Approved">Documents Approved</option>
+                    <option value="Submitted to Provider">Submitted to Provider</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Action Required">Action Required</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
+                  <select id="adm-filter-payment">
+                    <option value="">All Payments</option>
+                    <option value="Successful">Successful</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Failed">Failed</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Applications Table (Desktop) -->
+              <div class="admin-table-responsive">
+                <table class="admin-table" id="table-admin-applications">
+                  <thead>
+                    <tr>
+                      <th>App ID</th>
+                      <th>Applicant Details</th>
+                      <th>Submission Date</th>
+                      <th>Doc Status</th>
+                      <th>Payment</th>
+                      <th>Application Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-admin-applications">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Mobile Applications Cards Container -->
+              <div class="admin-apps-cards-list" id="admin-apps-cards-list">
+                <!-- Rendered dynamically for mobile devices -->
+              </div>
+            </div>
+
+            <!-- ADMIN VIEW: PROFESSIONAL APPLICATION DETAILS WORKSPACE (11 TABS) -->
+            <div id="view-admin-app-workspace" class="admin-view">
+              <!-- Compact Workspace Header -->
+              <div class="workspace-compact-header">
+                <div class="ws-header-top">
+                  <button id="ws-btn-back" class="btn-ws-back">
+                    <i class="fa-solid fa-arrow-left"></i> <span>Back to Applications</span>
+                  </button>
+                  <div class="ws-title-group">
+                    <span class="ws-app-id font-mono" id="ws-hdr-app-id">PAN-2026-1001</span>
+                    <h3 class="ws-applicant-name" id="ws-hdr-name">Ramesh Kumar</h3>
+                    <span class="ws-app-date" id="ws-hdr-date"><i class="fa-regular fa-calendar"></i> Submitted: 27/09/2026</span>
+                  </div>
+                </div>
+
+                <!-- Live Status Pills Row -->
+                <div class="ws-status-pills-row">
+                  <div class="ws-pill-box">
+                    <span class="ws-pill-label">Application Status</span>
+                    <span class="status-badge under-review" id="ws-hdr-status">Under Review</span>
+                  </div>
+                  <div class="ws-pill-box">
+                    <span class="ws-pill-label">Payment Status</span>
+                    <span class="doc-badge-pill verified font-bold" id="ws-hdr-pay-status">₹157.00 Paid</span>
+                  </div>
+                  <div class="ws-pill-box">
+                    <span class="ws-pill-label">Document Verification</span>
+                    <span class="doc-badge-pill pending" id="ws-hdr-doc-status">0/5 Verified</span>
+                  </div>
+                  <div class="ws-pill-box">
+                    <span class="ws-pill-label">Provider Mode</span>
+                    <span class="provider-tag sandbox text-xs" id="ws-hdr-prov-status">Sandbox Simulation</span>
+                  </div>
+                  <div class="ws-pill-box">
+                    <span class="ws-pill-label">Last Updated</span>
+                    <span class="text-xs text-muted" id="ws-hdr-updated">Recent</span>
+                  </div>
+                </div>
+
+                <!-- Top Quick Action Bar -->
+                <div class="workspace-action-bar">
+                  <button id="ws-act-change-status" class="btn-ws-action highlight">
+                    <i class="fa-solid fa-arrows-rotate"></i> <span>Change Status</span>
+                  </button>
+                  <button id="ws-act-assign-pan" class="btn-ws-action highlight-green">
+                    <i class="fa-solid fa-id-card"></i> <span>Allot PAN</span>
+                  </button>
+                  <button id="ws-act-edit-details" class="btn-ws-action">
+                    <i class="fa-solid fa-user-pen"></i> <span>Edit Details</span>
+                  </button>
+                  <button id="ws-act-download-summary" class="btn-ws-action">
+                    <i class="fa-solid fa-file-arrow-down"></i> <span>Download Dossier</span>
+                  </button>
+                  <button id="ws-act-quick-docs" class="btn-ws-action">
+                    <i class="fa-solid fa-folder-open"></i> <span>Documents</span>
+                  </button>
+                  <button id="ws-act-add-note" class="btn-ws-action">
+                    <i class="fa-solid fa-pen-to-square"></i> <span>Add Note</span>
+                  </button>
+                  <button id="ws-act-contact-user" class="btn-ws-action">
+                    <i class="fa-solid fa-envelope"></i> <span>Contact User</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Workspace 11 Tabs Navigation -->
+              <nav class="workspace-tabs-nav" id="ws-tabs-nav">
+                <button class="ws-tab-btn active" data-ws-pane="ws-pane-overview"><i class="fa-solid fa-chart-pie"></i> Overview</button>
+                <button class="ws-tab-btn" data-ws-pane="ws-pane-personal"><i class="fa-regular fa-user"></i> Personal</button>
+                <button class="ws-tab-btn" data-ws-pane="ws-pane-contact"><i class="fa-solid fa-phone"></i> Contact</button>
+                <button class="ws-tab-btn" data-ws-pane="ws-pane-address"><i class="fa-solid fa-location-dot"></i> Address</button>
+                <button class="ws-tab-btn" data-ws-pane="ws-pane-app-details"><i class="fa-solid fa-file-lines"></i> Application</button>
+                <button class="ws-tab-btn" data-ws-pane="ws-pane-documents"><i class="fa-solid fa-folder-tree"></i> Documents</button>
+                <button class="ws-tab-btn" data-ws-pane="ws-pane-payment"><i class="fa-solid fa-indian-rupee-sign"></i> Payment</button>
+                <button class="ws-tab-btn" data-ws-pane="ws-pane-provider"><i class="fa-solid fa-server"></i> Provider / Submission</button>
+                <button class="ws-tab-btn" data-ws-pane="ws-pane-notes"><i class="fa-solid fa-note-sticky"></i> Notes</button>
+                <button class="ws-tab-btn" data-ws-pane="ws-pane-support"><i class="fa-solid fa-headset"></i> Support</button>
+                <button class="ws-tab-btn" data-ws-pane="ws-pane-activity"><i class="fa-solid fa-clock-rotate-left"></i> Activity Log</button>
+              </nav>
+
+              <!-- Workspace Panes Container -->
+              <div class="workspace-panes-body">
+                <!-- TAB 1: OVERVIEW -->
+                <div id="ws-pane-overview" class="ws-pane active"></div>
+
+                <!-- TAB 2: PERSONAL DETAILS -->
+                <div id="ws-pane-personal" class="ws-pane hidden"></div>
+
+                <!-- TAB 3: CONTACT DETAILS -->
+                <div id="ws-pane-contact" class="ws-pane hidden"></div>
+
+                <!-- TAB 4: ADDRESS DETAILS -->
+                <div id="ws-pane-address" class="ws-pane hidden"></div>
+
+                <!-- TAB 5: APPLICATION DETAILS -->
+                <div id="ws-pane-app-details" class="ws-pane hidden"></div>
+
+                <!-- TAB 6: DOCUMENTS (DOCUMENT CENTER) -->
+                <div id="ws-pane-documents" class="ws-pane hidden"></div>
+
+                <!-- TAB 7: PAYMENT DETAILS -->
+                <div id="ws-pane-payment" class="ws-pane hidden"></div>
+
+                <!-- TAB 8: PROVIDER / SUBMISSION -->
+                <div id="ws-pane-provider" class="ws-pane hidden"></div>
+
+                <!-- TAB 9: NOTES -->
+                <div id="ws-pane-notes" class="ws-pane hidden"></div>
+
+                <!-- TAB 10: SUPPORT -->
+                <div id="ws-pane-support" class="ws-pane hidden"></div>
+
+                <!-- TAB 11: ACTIVITY LOG -->
+                <div id="ws-pane-activity" class="ws-pane hidden"></div>
+              </div>
+            </div>
+
+            <!-- ADMIN VIEW 3: USER MANAGEMENT -->
+            <div id="view-admin-users" class="admin-view">
+              <div class="view-header-bar">
+                <div>
+                  <h3>User Accounts Management</h3>
+                  <p>Registered applicants, profile details, and account permissions</p>
+                </div>
+              </div>
+
+              <div class="admin-table-responsive">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>User ID</th>
+                      <th>Name</th>
+                      <th>Contact</th>
+                      <th>Joined Date</th>
+                      <th>Applications</th>
+                      <th>Account Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-admin-users">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- ADMIN VIEW 4: PAYMENT MANAGEMENT -->
+            <div id="view-admin-payments" class="admin-view">
+              <div class="view-header-bar">
+                <div>
+                  <h3>Payment Transactions & Refunds</h3>
+                  <p>Audit gateway logs, verify receipts, and manage refunds</p>
+                </div>
+              </div>
+
+              <div class="admin-table-responsive">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Txn ID</th>
+                      <th>App ID</th>
+                      <th>Applicant</th>
+                      <th>Amount</th>
+                      <th>Method</th>
+                      <th>Status</th>
+                      <th>Timestamp</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-admin-payments">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- ADMIN VIEW 5: SUPPORT TICKETS -->
+            <div id="view-admin-tickets" class="admin-view">
+              <div class="view-header-bar">
+                <div>
+                  <h3>Support Helpdesk</h3>
+                  <p>Respond to customer questions and resolution tickets</p>
+                </div>
+              </div>
+
+              <div class="admin-tickets-container" id="admin-tickets-container">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+            <!-- ADMIN VIEW 6: BROADCAST NOTIFICATIONS -->
+            <div id="view-admin-broadcast" class="admin-view">
+              <div class="view-header-bar">
+                <div>
+                  <h3>Send Broadcast Notification</h3>
+                  <p>Dispatch updates directly to applicant dashboards</p>
+                </div>
+              </div>
+
+              <div class="admin-card-box max-w-xl">
+                <form id="form-admin-broadcast">
+                  <div class="form-group">
+                    <label for="broadcast-target">Recipient Target</label>
+                    <select id="broadcast-target">
+                      <option value="all">All Registered Users</option>
+                      <option value="pending">Users with Pending Documents</option>
+                      <option value="action_required">Users Requiring Re-upload</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="broadcast-title">Notification Title</label>
+                    <input type="text" id="broadcast-title" placeholder="e.g. Document Verification Notice" required />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="broadcast-message">Notification Message</label>
+                    <textarea id="broadcast-message" rows="4" placeholder="Enter message text..." required></textarea>
+                  </div>
+
+                  <button type="submit" class="btn-android-primary">
+                    <i class="fa-solid fa-paper-plane"></i> Dispatch Notification
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <!-- ADMIN VIEW 7: FEE & SYSTEM SETTINGS -->
+            <div id="view-admin-settings" class="admin-view">
+              <div class="view-header-bar">
+                <div>
+                  <h3>Application Fee & System Configuration</h3>
+                  <p>Control dynamic pricing, provider modes, and document requirements</p>
+                </div>
+              </div>
+
+              <div class="settings-grid">
+                <!-- Fee Configuration Card -->
+                <div class="admin-card-box">
+                  <div class="card-box-header">
+                    <h4><i class="fa-solid fa-indian-rupee-sign text-emerald"></i> PAN Application Fee Settings</h4>
+                  </div>
+                  <form id="form-admin-fee-settings">
+                    <div class="form-group">
+                      <label for="cfg_base_fee">Base Government Fee (₹)</label>
+                      <input type="number" id="cfg_base_fee" value="107" min="0" required />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="cfg_service_fee">Facilitation & Verification Charge (₹)</label>
+                      <input type="number" id="cfg_service_fee" value="50" min="0" required />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="cfg_tax_fee">Taxes / GST (₹)</label>
+                      <input type="number" id="cfg_tax_fee" value="0" min="0" required />
+                    </div>
+
+                    <div class="fee-preview-box">
+                      <span>Total Configured Payable:</span>
+                      <strong class="preview-total" id="cfg-preview-total">₹157</strong>
+                    </div>
+
+                    <button type="submit" class="btn-android-primary mt-3">
+                      <i class="fa-solid fa-floppy-disk"></i> Save Fee Settings
+                    </button>
+                  </form>
+                </div>
+
+                <!-- Provider & Environment Card -->
+                <div class="admin-card-box">
+                  <div class="card-box-header">
+                    <h4><i class="fa-solid fa-server text-indigo"></i> Authorized PAN Provider Integration</h4>
+                  </div>
+                  <div class="provider-status-pane">
+                    <div class="provider-tag sandbox">
+                      <span class="dot"></span>
+                      <span>CURRENT MODE: SANDBOX / DEMO</span>
+                    </div>
+                    <p class="provider-info-text">
+                      In Sandbox mode, official acknowledgement numbers are not forged. Once an authorized provider API contract is signed with Protean or UTIITSL, enter backend endpoint and API credentials below.
+                    </p>
+                    
+                    <div class="form-group">
+                      <label>Provider Type</label>
+                      <select id="cfg_provider_type">
+                        <option value="sandbox">Sandbox / Demo Simulation</option>
+                        <option value="protean">Protean (NSDL) e-Gov API</option>
+                        <option value="utiitsl">UTIITSL PAN Integration API</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label>Provider API Key / Token</label>
+                      <input type="password" id="cfg_provider_key" placeholder="Enter secure provider API key" value="DEMO-SANDBOX-KEY-UNAUTHORIZED" />
+                    </div>
+
+                    <button type="button" id="btn-test-provider" class="btn-android-secondary">
+                      <i class="fa-solid fa-plug"></i> Test Connection
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ADMIN VIEW 8: AUDIT LOGS -->
+            <div id="view-admin-audit" class="admin-view">
+              <div class="view-header-bar">
+                <div>
+                  <h3>Admin Audit Trail & Security Logs</h3>
+                  <p>Immutable log of document views, secure downloads, status edits, and verification events</p>
+                </div>
+              </div>
+
+              <div class="admin-table-responsive">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Timestamp</th>
+                      <th>Admin Actor</th>
+                      <th>Action</th>
+                      <th>Target Application</th>
+                      <th>Details / Metadata</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-admin-audit">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- GLOBAL MODALS & DIALOGS -->
+    <!-- ============================================== -->
+
+    <!-- MODAL: ADMIN APPLICATION DETAILS INSPECTOR -->
+    <div id="modal-app-details" class="modal-overlay hidden">
+      <div class="modal-card modal-large">
+        <div class="modal-header">
+          <div>
+            <span class="modal-sup-title" id="m-app-id">PAN-2026-1001</span>
+            <h3 class="modal-title" id="m-app-applicant">Application Dossier</h3>
+          </div>
+          <button class="btn-modal-close" data-close-modal="modal-app-details"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="modal-body-scrollable" id="m-app-body-content">
+          <!-- Populated dynamically: Personal, Contact, Address, Documents, Payment, Status Change Panel -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: DOCUMENT PREVIEW & SECURE DOWNLOAD -->
+    <div id="modal-doc-viewer" class="modal-overlay hidden">
+      <div class="modal-card modal-doc-preview">
+        <div class="modal-header">
+          <div>
+            <h4 id="doc-viewer-title">Identity Proof Preview</h4>
+            <span class="modal-sup-title" id="doc-viewer-subtitle">Application: PAN-2026-1001</span>
+          </div>
+          <button class="btn-modal-close" data-close-modal="modal-doc-viewer"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="doc-viewer-canvas-wrap">
+          <img id="doc-viewer-img" src="" alt="Document Preview" />
+        </div>
+        <div class="doc-viewer-footer">
+          <div class="security-watermark-pill">
+            <i class="fa-solid fa-shield-halved"></i> Authorized Admin Access • Watermarked
+          </div>
+          <div class="doc-viewer-actions">
+            <button id="btn-download-secure-doc" class="btn-android-secondary">
+              <i class="fa-solid fa-download"></i> Download Secure Copy
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: DOCUMENT REJECTION REASON PROMPT -->
+    <div id="modal-doc-reject" class="modal-overlay hidden">
+      <div class="modal-card modal-center max-w-md">
+        <div class="modal-header">
+          <h4>Reject Document & Request Re-upload</h4>
+          <button class="btn-modal-close" data-close-modal="modal-doc-reject"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-note">The applicant will be alerted immediately with this exact rejection reason so they can re-upload a clear copy.</p>
+          <div class="form-group mt-2">
+            <label for="reject-reason-preset">Common Rejection Reasons</label>
+            <select id="reject-reason-preset">
+              <option value="Document is blurred or unclear. Please upload a clear photo or scan.">Document is blurred or unclear. Please upload a clear photo or scan.</option>
+              <option value="Corners of the document are cropped or missing.">Corners of the document are cropped or missing.</option>
+              <option value="Name on document does not match the application details.">Name on document does not match the application details.</option>
+              <option value="Document is expired or outdated.">Document is expired or outdated.</option>
+              <option value="Signature is faint or illegible.">Signature is faint or illegible.</option>
+              <option value="Custom">Custom Reason...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="reject-reason-text">Detailed Explanation for Applicant</label>
+            <textarea id="reject-reason-text" rows="3" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-android-outline" data-close-modal="modal-doc-reject">Cancel</button>
+          <button id="btn-confirm-reject-doc" class="btn-danger">
+            <i class="fa-solid fa-triangle-exclamation"></i> Confirm Rejection
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: USER RE-UPLOAD DOCUMENT -->
+    <div id="modal-user-reupload" class="modal-overlay hidden">
+      <div class="modal-card modal-center max-w-md">
+        <div class="modal-header">
+          <h4>Re-upload Document</h4>
+          <button class="btn-modal-close" data-close-modal="modal-user-reupload"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class="rejection-reason-callout" id="reupload-reason-callout">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <div>
+              <strong>Admin Note:</strong>
+              <p id="reupload-reason-text">Document was blurred.</p>
+            </div>
+          </div>
+          <div class="upload-zone mt-3" id="reupload-dropzone">
+            <input type="file" id="reupload-file-input" accept="image/*,.pdf" class="file-hidden" />
+            <div class="upload-zone-prompt">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <span>Select New Clear Photo or PDF</span>
+              <small>Max 5MB</small>
+            </div>
+            <div class="doc-preview-wrap hidden" id="reupload-preview">
+              <img src="" alt="New Document" class="preview-thumbnail" />
+              <div class="preview-info">
+                <span class="preview-name" id="reupload-filename">new-doc.jpg</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-android-outline" data-close-modal="modal-user-reupload">Cancel</button>
+          <button id="btn-submit-reupload" class="btn-android-primary" disabled>
+            <i class="fa-solid fa-upload"></i> Submit for Verification
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: ADMIN CHANGE APPLICATION STATUS -->
+    <div id="modal-admin-status-change" class="modal-overlay hidden">
+      <div class="modal-card modal-center max-w-md">
+        <div class="modal-header">
+          <div>
+            <h4 class="modal-title">Update Application Status</h4>
+            <span class="modal-sup-title" id="m-status-app-id">PAN-2026-1001</span>
+          </div>
+          <button class="btn-modal-close" data-close-modal="modal-admin-status-change"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class="current-status-display mb-3">
+            <span class="text-xs text-muted block">Current Status:</span>
+            <span class="status-badge" id="m-status-current-badge">Under Review</span>
+          </div>
+          <div class="form-group">
+            <label for="m-select-new-status">Select New Status <span class="required">*</span></label>
+            <select id="m-select-new-status" class="font-bold">
+              <option value="Under Review">Under Review (Document Screening)</option>
+              <option value="Documents Approved">Documents Approved (Ready for Submission)</option>
+              <option value="Submitted to Provider">Submitted to Provider (Sandbox / NSDL Queue)</option>
+              <option value="Processing">Processing (With Assessment Officer)</option>
+              <option value="Completed">Completed (PAN Allotted & Dispatched)</option>
+              <option value="Action Required">Action Required (Applicant Re-upload Needed)</option>
+              <option value="Rejected">Rejected (Ineligible / Discrepancy)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="m-status-note">Status Note / Audit Reason <span class="required">*</span></label>
+            <textarea id="m-status-note" rows="3" placeholder="Enter reason or remark for this status change..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="checkbox-container text-xs">
+              <input type="checkbox" id="m-status-notify-user" checked />
+              <span class="custom-checkmark"></span>
+              <span>Send instant in-app alert to applicant</span>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-android-outline" data-close-modal="modal-admin-status-change">Cancel</button>
+          <button id="btn-save-admin-status" class="btn-android-primary">
+            <i class="fa-solid fa-check"></i> Update Status
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: ADMIN ALLOT PAN & COURIER DISPATCH -->
+    <div id="modal-admin-assign-pan" class="modal-overlay hidden">
+      <div class="modal-card modal-center max-w-md">
+        <div class="modal-header">
+          <div>
+            <h4 class="modal-title">Allot PAN & Dispatch Details</h4>
+            <span class="modal-sup-title" id="m-assign-app-id">PAN-2026-1001</span>
+          </div>
+          <button class="btn-modal-close" data-close-modal="modal-admin-assign-pan"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class="card-notice mb-3">
+            <i class="fa-solid fa-id-card text-green"></i>
+            <div>
+              <strong>PAN Card Allotment:</strong>
+              <p>Entering the 10-character PAN number will mark this application as Completed and notify the user.</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="m-input-pan-number">Allotted PAN Number <span class="required">*</span></label>
+            <input type="text" id="m-input-pan-number" maxlength="10" placeholder="e.g. ABCDE1234F" style="text-transform:uppercase;font-family:monospace;font-size:16px;letter-spacing:2px;font-weight:700;" required />
+            <span class="form-hint">Format: 5 letters, 4 digits, 1 letter</span>
+          </div>
+          <div class="form-group">
+            <label for="m-input-ack-number">NSDL / UTI Acknowledgement No.</label>
+            <input type="text" id="m-input-ack-number" maxlength="15" placeholder="e.g. 881029384756192" font-family:monospace; />
+          </div>
+          <div class="form-group">
+            <label for="m-input-speedpost">Speed Post Consignment Tracking No.</label>
+            <input type="text" id="m-input-speedpost" placeholder="e.g. SP-DL-8947321IN" style="text-transform:uppercase;font-family:monospace;" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-android-outline" data-close-modal="modal-admin-assign-pan">Cancel</button>
+          <button id="btn-confirm-assign-pan" class="btn-android-primary" style="background:#15803d;">
+            <i class="fa-solid fa-check-circle"></i> Save & Allot PAN
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: ADMIN EDIT APPLICANT DETAILS (CORRECTION) -->
+    <div id="modal-admin-edit-applicant" class="modal-overlay hidden">
+      <div class="modal-card modal-large max-w-2xl">
+        <div class="modal-header">
+          <div>
+            <h4 class="modal-title">Edit Applicant Details (Correction)</h4>
+            <span class="modal-sup-title" id="m-edit-app-id">PAN-2026-1001</span>
+          </div>
+          <button class="btn-modal-close" data-close-modal="modal-admin-edit-applicant"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body-scrollable">
+          <form id="form-admin-edit-applicant" class="space-y-3">
+            <h5 class="font-bold text-slate-800 border-b pb-1">Personal Details</h5>
+            <div class="form-row-3">
+              <div class="form-group">
+                <label for="edit_app_title">Title</label>
+                <select id="edit_app_title">
+                  <option value="Shri">Shri</option>
+                  <option value="Smt">Smt</option>
+                  <option value="Kumari">Kumari</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="edit_app_first_name">First Name</label>
+                <input type="text" id="edit_app_first_name" required />
+              </div>
+              <div class="form-group">
+                <label for="edit_app_last_name">Last Name</label>
+                <input type="text" id="edit_app_last_name" />
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="edit_app_pan_name">Name to be Printed on PAN</label>
+                <input type="text" id="edit_app_pan_name" required />
+              </div>
+              <div class="form-group">
+                <label for="edit_app_dob">Date of Birth</label>
+                <input type="date" id="edit_app_dob" required />
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="edit_app_gender">Gender</label>
+                <select id="edit_app_gender">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Transgender">Transgender</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="edit_app_father">Father's Full Name</label>
+                <input type="text" id="edit_app_father" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="edit_app_aadhaar">Aadhaar Number</label>
+              <input type="text" id="edit_app_aadhaar" maxlength="12" pattern="[0-9]{12}" />
+            </div>
+
+            <h5 class="font-bold text-slate-800 border-b pb-1 mt-4">Contact Details</h5>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="edit_app_mobile">Mobile Number</label>
+                <input type="tel" id="edit_app_mobile" maxlength="10" required />
+              </div>
+              <div class="form-group">
+                <label for="edit_app_email">Email Address</label>
+                <input type="email" id="edit_app_email" required />
+              </div>
+            </div>
+
+            <h5 class="font-bold text-slate-800 border-b pb-1 mt-4">Delivery Address Details</h5>
+            <div class="form-group">
+              <label for="edit_app_flat">Flat / Room / Door / Block No.</label>
+              <input type="text" id="edit_app_flat" required />
+            </div>
+            <div class="form-group">
+              <label for="edit_app_street">Road / Street / Post Office</label>
+              <input type="text" id="edit_app_street" required />
+            </div>
+            <div class="form-row-3">
+              <div class="form-group">
+                <label for="edit_app_city">City / District</label>
+                <input type="text" id="edit_app_city" required />
+              </div>
+              <div class="form-group">
+                <label for="edit_app_state">State</label>
+                <input type="text" id="edit_app_state" required />
+              </div>
+              <div class="form-group">
+                <label for="edit_app_pincode">PIN Code</label>
+                <input type="text" id="edit_app_pincode" maxlength="6" pattern="[0-9]{6}" required />
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-android-outline" data-close-modal="modal-admin-edit-applicant">Cancel</button>
+          <button id="btn-save-admin-edit" class="btn-android-primary">
+            <i class="fa-solid fa-floppy-disk"></i> Save Corrections
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: ADMIN UPDATE PAYMENT STATUS / REFUND -->
+    <div id="modal-admin-payment-action" class="modal-overlay hidden">
+      <div class="modal-card modal-center max-w-md">
+        <div class="modal-header">
+          <div>
+            <h4 class="modal-title">Payment Reconciliation & Refund</h4>
+            <span class="modal-sup-title" id="m-pay-app-id">PAN-2026-1001</span>
+          </div>
+          <button class="btn-modal-close" data-close-modal="modal-admin-payment-action"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class="payment-amount-hero mb-3 p-3 bg-slate-100 rounded text-center">
+            <span class="text-xs text-muted block">Configured Application Fee</span>
+            <strong class="text-2xl text-primary" id="m-pay-hero-amount">₹157.00</strong>
+          </div>
+          <div class="form-group">
+            <label for="m-select-pay-status">Payment Status <span class="required">*</span></label>
+            <select id="m-select-pay-status" class="font-bold">
+              <option value="Successful">Successful (Fee Received)</option>
+              <option value="Pending">Pending (Awaiting Gateway Settlement)</option>
+              <option value="Failed">Failed (Gateway Error)</option>
+              <option value="Refunded">Refunded (Amount Returned to User)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="m-input-pay-txn">Transaction / UTR Reference ID</label>
+            <input type="text" id="m-input-pay-txn" font-family:monospace; />
+          </div>
+          <div class="form-group">
+            <label for="m-pay-action-note">Reconciliation Remark / Reason</label>
+            <input type="text" id="m-pay-action-note" placeholder="e.g. Bank statement UTR match or user refund" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-android-outline" data-close-modal="modal-admin-payment-action">Cancel</button>
+          <button id="btn-save-admin-payment" class="btn-android-primary">
+            <i class="fa-solid fa-check"></i> Save Payment Update
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: SKETCHWARE & HOPWEB APK EXPORT GUIDE -->
+    <div id="modal-apk-guide" class="modal-overlay hidden">
+      <div class="modal-card modal-large">
+        <div class="modal-header">
+          <div class="flex items-center gap-2">
+            <i class="fa-brands fa-android text-green fa-xl"></i>
+            <div>
+              <h3 class="modal-title">Sketchware & HopWeb APK Build Guide</h3>
+              <span class="modal-sup-title">Convert this Web App into a Native Android APK</span>
+            </div>
+          </div>
+          <button class="btn-modal-close" data-close-modal="modal-apk-guide"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="modal-body-scrollable">
+          <!-- Guide Tabs -->
+          <div class="guide-tabs">
+            <button class="guide-tab-btn active" data-guide-target="tab-sketchware">
+              <i class="fa-solid fa-mobile-screen"></i> Sketchware Pro Guide
+            </button>
+            <button class="guide-tab-btn" data-guide-target="tab-hopweb">
+              <i class="fa-solid fa-code"></i> HopWeb Guide
+            </button>
+            <button class="guide-tab-btn" data-guide-target="tab-pwa">
+              <i class="fa-solid fa-download"></i> 1-Click PWA (No Build Needed)
+            </button>
+          </div>
+
+          <!-- Guide 1: Sketchware Pro -->
+          <div id="tab-sketchware" class="guide-pane active">
+            <div class="guide-step">
+              <span class="step-num">1</span>
+              <div>
+                <h5>Create New Sketchware Pro Project</h5>
+                <p>Open Sketchware, tap (+) to create a new project. Name it <strong>PAN Card Apply</strong> and set Package Name (e.g. <code>com.digitaldhadi.pancard</code>).</p>
+              </div>
+            </div>
+
+            <div class="guide-step">
+              <span class="step-num">2</span>
+              <div>
+                <h5>Add WebView Component</h5>
+                <p>Drag a <code>WebView</code> component from the palette onto <code>main.xml</code>. Set width and height to <code>match_parent</code>.</p>
+              </div>
+            </div>
+
+            <div class="guide-step">
+              <span class="step-num">3</span>
+              <div>
+                <h5>Enable Android Permissions in AndroidManifest</h5>
+                <p>In Sketchware's Permission Manager, check the following permissions:</p>
+                <pre class="code-block"><code>&lt;uses-permission android:name="android.permission.INTERNET" /&gt;
+&lt;uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /&gt;
+&lt;uses-permission android:name="android.permission.CAMERA" /&gt;
+&lt;uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /&gt;</code></pre>
+              </div>
+            </div>
+
+            <div class="guide-step">
+              <span class="step-num">4</span>
+              <div>
+                <h5>Add Java Logic in onCreate Event</h5>
+                <p>In <code>MainActivity.java</code> &rarr; <code>onCreate</code>, add this block to support file uploads and modern web standards:</p>
+                <pre class="code-block"><code>webview1.getSettings().setJavaScriptEnabled(true);
+webview1.getSettings().setDomStorageEnabled(true);
+webview1.getSettings().setAllowFileAccess(true);
+webview1.getSettings().setAllowContentAccess(true);
+webview1.setWebChromeClient(new WebChromeClient());
+webview1.loadUrl(getCurrentAppUrl());</code></pre>
+              </div>
+            </div>
+
+            <div class="guide-step">
+              <span class="step-num">5</span>
+              <div>
+                <h5>Run & Build APK</h5>
+                <p>Tap <strong>RUN</strong> in Sketchware to compile the project into a signed Android APK file ready to install on your phone!</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Guide 2: HopWeb -->
+          <div id="tab-hopweb" class="guide-pane hidden">
+            <div class="guide-step">
+              <span class="step-num">1</span>
+              <div>
+                <h5>Open HopWeb App</h5>
+                <p>Create a new Web project in HopWeb. Name it <strong>PAN Apply Portal</strong>.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <span class="step-num">2</span>
+              <div>
+                <h5>Load Direct App URL or Local Bundle</h5>
+                <p>HopWeb allows web packaging. Set your target URL to this hosted applet URL:</p>
+                <div class="copy-url-box">
+                  <input type="text" id="apk-app-url-input" readonly value="" />
+                  <button id="btn-copy-apk-url" class="btn-sm-primary"><i class="fa-regular fa-copy"></i> Copy</button>
+                </div>
+              </div>
+            </div>
+            <div class="guide-step">
+              <span class="step-num">3</span>
+              <div>
+                <h5>Export as APK</h5>
+                <p>Go to Project Settings &rarr; Export &rarr; Build Signed APK.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Guide 3: 1-Click PWA -->
+          <div id="tab-pwa" class="guide-pane hidden">
+            <div class="pwa-guide-box">
+              <i class="fa-solid fa-mobile-screen-button pwa-icon"></i>
+              <h4>Install Immediately on Android without Sketchware</h4>
+              <p>You don't need any complex compiler. This portal is a Progressive Web App (PWA):</p>
+              <ol class="pwa-steps-list">
+                <li>Open this URL in Google Chrome on your Android mobile</li>
+                <li>Tap the <strong>3 vertical dots</strong> in Chrome's top right corner</li>
+                <li>Tap <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong></li>
+                <li>An app icon will appear on your Android launcher that launches full-screen like a native APK!</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Popup -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

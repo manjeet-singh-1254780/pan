@@ -1,0 +1,22 @@
+{
+  "name": "PAN Card Apply - Digital Services Portal",
+  "short_name": "PAN Apply",
+  "description": "Complete mobile-first PAN Card application and tracking portal",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0e2a47",
+  "theme_color": "#0e2a47",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='42' fill='%230e2a47'/><circle cx='96' cy='96' r='60' fill='%23f97316'/><path d='M66 96 L86 116 L126 76' fill='none' stroke='%23ffffff' stroke-width='14' stroke-linecap='round' stroke-linejoin='round'/></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='110' fill='%230e2a47'/><circle cx='256' cy='256' r='160' fill='%23f97316'/><path d='M176 256 L230 310 L336 204' fill='none' stroke='%23ffffff' stroke-width='36' stroke-linecap='round' stroke-linejoin='round'/></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

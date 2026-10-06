@@ -1,0 +1,6 @@
+{
+  "name": "PAN Card Apply - Digital Services Portal",
+  "description": "Complete mobile-first PAN Card application and tracking portal with user dashboard, document verification, payment tracking, and admin management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
